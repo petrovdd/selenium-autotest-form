@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import ru.petrovdd.page.FormPage;
-
-import java.util.concurrent.TimeUnit;
+import ru.petrovdd.util.RandomData;
 
 /**
  * Класс для проведения теста формы
@@ -33,6 +32,7 @@ class FormTest {
     @Test
     void fullRegistration() {
         driver.get(BASE_URL);
+        //TODO добавить subject
         formPage.setFirstNameField("Alex")
                 .setLastNameField("Smith")
                 .setUserEmailField("user@mail.ru")
@@ -45,6 +45,40 @@ class FormTest {
                 .setState("NCR")
                 .setCity("Delhi")
                 .submitClick()
+                .checkResult("Student Name", "Alex Smith")
+                .checkResult("Student Email", "user@mail.ru")
+                .checkResult("Gender", "Male")
+                .checkResult("Mobile", "7926813093")
+                .checkResult("Date of Birth", "08 November,1992")
+                .checkResult("Hobbies", "Sports")
+                .checkResult("Picture", "file.txt")
+                .checkResult("Address", "USA")
+                .checkResult("State and City", "NCR Delhi");
+        driver.quit();
+    }
+
+    /**
+     * Тест с генерацией данных
+     */
+    @Test
+    void fullRegistrationGenerateData() {
+        RandomData randomData = new RandomData();
+        driver.get(BASE_URL);
+        //TODO добавить subject
+        formPage.setFirstNameField(randomData.getFirstName())
+                .setLastNameField(randomData.getLastName())
+                .setUserEmailField(randomData.getRandomEmail())
+                .selectGenderWrapperField(randomData.getRandomGender())
+                .setUserNumberField(randomData.getPhoneNumber())
+                .setDateOfBirthInput(randomData.getDay(), randomData.getMonthName(), randomData.getYear())
+                .selectHobbies(randomData.getRandomHobbies())
+                //TODO подумать над генерацией пути для файла
+                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\file.txt")
+                .setCurrentAddress(randomData.getFullAddress())
+                .setState(randomData.getRandomState())
+                .setCity(randomData.getRandomCity())
+                .submitClick()
+                //TODO изменить все проверки
                 .checkResult("Student Name", "Alex Smith")
                 .checkResult("Student Email", "user@mail.ru")
                 .checkResult("Gender", "Male")

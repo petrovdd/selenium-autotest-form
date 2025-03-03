@@ -107,6 +107,12 @@ public class FormPage {
     private WebElement currentAddressField;
 
     /**
+     * Кнопка закрытия окна
+     */
+    @FindBy(css = "#closeLargeModal")
+    private WebElement closeLargeModalButton;
+
+    /**
      * Поле выбора страны
      */
     @FindBy(xpath = "//*[@id='state']/descendant::input[@id='react-select-3-input']")
@@ -150,6 +156,13 @@ public class FormPage {
     public FormPage setLastNameField(@NonNull String lastName) {
         lastNameField.sendKeys(lastName);
         return this;
+    }
+
+    /**
+     * Нажатие кнопки submit закрытия модальной формы
+     */
+    public void submitCloseClick() {
+        closeLargeModalButton.click();
     }
 
     /**

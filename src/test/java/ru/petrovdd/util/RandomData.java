@@ -2,8 +2,7 @@ package ru.petrovdd.util;
 
 import com.github.javafaker.Faker;
 
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Класс для генерации данных
@@ -41,7 +40,7 @@ public class RandomData {
         randomFirstName = faker.name().firstName();
         randomLastName = faker.name().lastName();
         randomEmail = faker.internet().emailAddress();
-        randomPhoneNumber = faker.phoneNumber().phoneNumber();
+        randomPhoneNumber = faker.phoneNumber().phoneNumber().replace(" ", "");
         randomFullAddress = faker.address().fullAddress();
 
     }
@@ -167,8 +166,21 @@ public class RandomData {
      * @return наименование города
      */
     private String generateRandomCity() {
-        String[] city = {"Delhi", "Gurgaon", "Noida"};
-        return getRandomItemFromArray(city);
+        List<String> city = new ArrayList<>();
+        if (randomState.equals("NCR")) {
+            city.addAll(Arrays.asList("Delhi", "Gurgaon", "Noida"));
+        }
+        if (randomState.equals("Uttar Pradesh")) {
+            city.addAll(Arrays.asList("Agra", "Lucknow", "Merrut"));
+        }
+        if (randomState.equals("Haryana")) {
+            city.addAll(Arrays.asList("Karnal", "Panipat"));
+        }
+        if (randomState.equals("Rajasthan")) {
+            city.addAll(Arrays.asList("Jaipur", "Jaiselmer"));
+        }
+        String[] array = new String[city.size()];
+        return getRandomItemFromArray(city.toArray(array));
     }
 
     /**
@@ -178,9 +190,9 @@ public class RandomData {
      */
     private String generateMonthName() {
         //TODO попробовать вынести все это в список/списки
-        String[] genders = {"January", "February", "March", "April", "May", "June",
+        String[] months = {"January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"};
-        return getRandomItemFromArray(genders);
+        return getRandomItemFromArray(months);
     }
 
     /**

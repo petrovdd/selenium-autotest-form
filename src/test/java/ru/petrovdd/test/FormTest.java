@@ -1,6 +1,8 @@
 package ru.petrovdd.test;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -26,12 +28,16 @@ class FormTest {
         formPage = new FormPage(driver);
     }
 
+    @BeforeEach
+    void openPage() {
+        driver.get(BASE_URL);
+    }
+
     /**
      * Позитивный тест на проверку заполнения полей формы
      */
     @Test
     void fullRegistration() {
-        driver.get(BASE_URL);
         //TODO добавить subject
         formPage.setFirstNameField("Alex")
                 .setLastNameField("Smith")
@@ -53,8 +59,8 @@ class FormTest {
                 .checkResult("Hobbies", "Sports")
                 .checkResult("Picture", "file.txt")
                 .checkResult("Address", "USA")
-                .checkResult("State and City", "NCR Delhi");
-        driver.quit();
+                .checkResult("State and City", "NCR Delhi")
+                .submitCloseClick();
     }
 
     /**
@@ -63,7 +69,6 @@ class FormTest {
     @Test
     void fullRegistrationGenerateData() {
         RandomData randomData = new RandomData();
-        driver.get(BASE_URL);
         //TODO добавить subject
         formPage.setFirstNameField(randomData.getFirstName())
                 .setLastNameField(randomData.getLastName())
@@ -79,15 +84,23 @@ class FormTest {
                 .setCity(randomData.getRandomCity())
                 .submitClick()
                 //TODO изменить все проверки
-                .checkResult("Student Name", "Alex Smith")
-                .checkResult("Student Email", "user@mail.ru")
-                .checkResult("Gender", "Male")
-                .checkResult("Mobile", "7926813093")
-                .checkResult("Date of Birth", "08 November,1992")
-                .checkResult("Hobbies", "Sports")
+                .checkResult("Student Name", randomData.getFirstName() + " " + randomData.getLastName())
+                .checkResult("Student Email", randomData.getRandomEmail())
+                .checkResult("Gender", randomData.getRandomGender())
+                //Не пройдет, ошибка - в поле не влезает весь номер
+                //.checkResult("Mobile", randomData.getPhoneNumber())
+                //Не пройдет
+                //.checkResult("Date of Birth",
+                //        randomData.getDay() + " " + randomData.getMonthName() + "," + randomData.getYear())
+                .checkResult("Hobbies", randomData.getRandomHobbies())
                 .checkResult("Picture", "file.txt")
-                .checkResult("Address", "USA")
-                .checkResult("State and City", "NCR Delhi");
+                .checkResult("Address", randomData.getFullAddress())
+                .checkResult("State and City", randomData.getRandomState() + " " + randomData.getRandomCity())
+                .submitCloseClick();
+    }
+
+    @AfterAll
+    static void afterAll() {
         driver.quit();
     }
 

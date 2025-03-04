@@ -1,9 +1,6 @@
 package ru.petrovdd.test;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import ru.petrovdd.page.FormPage;
@@ -12,6 +9,7 @@ import ru.petrovdd.util.RandomData;
 /**
  * Класс для проведения теста формы
  */
+@DisplayName("Тесты на заполнение формы")
 class FormTest {
 
     private final static String BASE_URL = "https://demoqa.com/automation-practice-form";
@@ -37,6 +35,14 @@ class FormTest {
      * Позитивный тест на проверку заполнения полей формы
      */
     @Test
+    //TODO @AllureId() буду использовать когда подключу Allure, id тест-кейса, вынесу в отдельную ветку
+    //TODO Подкорректировать заголовки тест кейса
+    @DisplayName("Все поля должны заполниться и закрыться форма с их выводом")
+    @Tags({
+            @Tag("SMOKE"),
+            @Tag("WEB")
+    })//TODO Прописать priority и severity в теге, пропишу в отдельной ветке у каждого теста
+    @Disabled("Проигнорируем")
     void fullRegistration() {
         //TODO добавить subject
         formPage.setFirstNameField("Alex")
@@ -67,6 +73,10 @@ class FormTest {
      * Тест с генерацией данных
      */
     @Test
+    @Tag("WEB")
+    @DisplayName("Тест формы с сгенерированными данными")
+    //TODO
+    //@ValueSource(strings = {"Dan", "JUnit"}, name = "" - описание) - запустит для каждого значения свой тест
     void fullRegistrationGenerateData() {
         RandomData randomData = new RandomData();
         //TODO добавить subject
@@ -98,6 +108,14 @@ class FormTest {
                 .checkResult("State and City", randomData.getRandomState() + " " + randomData.getRandomCity())
                 .submitCloseClick();
     }
+
+    //TODO в отдельной ветке прописать параметризованный тест
+    /*@ParameterizedTest
+    @Tag("WEB")
+    @DisplayName("Тест формы с сгенерированными данными")
+    void fullRegistrationGenerateData(String searchQuery) {
+
+    }*/
 
     @AfterAll
     static void afterAll() {

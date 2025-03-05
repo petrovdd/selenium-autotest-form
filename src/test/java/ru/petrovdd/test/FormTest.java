@@ -1,8 +1,13 @@
 package ru.petrovdd.test;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import ru.petrovdd.enums.State;
 import ru.petrovdd.page.FormPage;
 import ru.petrovdd.util.RandomData;
 
@@ -44,7 +49,7 @@ class FormTest {
     })//TODO Прописать priority и severity в теге, пропишу в отдельной ветке у каждого теста
     @Disabled("Проигнорируем")
     void fullRegistration() {
-        //TODO добавить subject
+        //TODO добавить subject, в отдельную ветку т.к. много доработок
         formPage.setFirstNameField("Alex")
                 .setLastNameField("Smith")
                 .setUserEmailField("user@mail.ru")
@@ -52,7 +57,7 @@ class FormTest {
                 .setUserNumberField("79268130933")
                 .setDateOfBirthInput("8", "November", "1992")
                 .selectHobbies("Sports")
-                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\file.txt")
+                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\test_data.csv")
                 .setCurrentAddress("USA")
                 .setState("NCR")
                 .setCity("Delhi")
@@ -63,7 +68,7 @@ class FormTest {
                 .checkResult("Mobile", "7926813093")
                 .checkResult("Date of Birth", "08 November,1992")
                 .checkResult("Hobbies", "Sports")
-                .checkResult("Picture", "file.txt")
+                .checkResult("Picture", "test_data.csv")
                 .checkResult("Address", "USA")
                 .checkResult("State and City", "NCR Delhi")
                 .submitCloseClick();
@@ -75,7 +80,6 @@ class FormTest {
     @Test
     @Tag("WEB")
     @DisplayName("Тест формы с сгенерированными данными")
-    //TODO
     //@ValueSource(strings = {"Dan", "JUnit"}, name = "" - описание) - запустит для каждого значения свой тест
     void fullRegistrationGenerateData() {
         RandomData randomData = new RandomData();
@@ -88,12 +92,11 @@ class FormTest {
                 .setDateOfBirthInput(randomData.getDay(), randomData.getMonthName(), randomData.getYear())
                 .selectHobbies(randomData.getRandomHobbies())
                 //TODO подумать над генерацией пути для файла
-                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\file.txt")
+                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\test_data.csv")
                 .setCurrentAddress(randomData.getFullAddress())
                 .setState(randomData.getRandomState())
                 .setCity(randomData.getRandomCity())
                 .submitClick()
-                //TODO изменить все проверки
                 .checkResult("Student Name", randomData.getFirstName() + " " + randomData.getLastName())
                 .checkResult("Student Email", randomData.getRandomEmail())
                 .checkResult("Gender", randomData.getRandomGender())
@@ -103,19 +106,79 @@ class FormTest {
                 //.checkResult("Date of Birth",
                 //        randomData.getDay() + " " + randomData.getMonthName() + "," + randomData.getYear())
                 .checkResult("Hobbies", randomData.getRandomHobbies())
-                .checkResult("Picture", "file.txt")
+                .checkResult("Picture", "test_data.csv")
                 .checkResult("Address", randomData.getFullAddress())
                 .checkResult("State and City", randomData.getRandomState() + " " + randomData.getRandomCity())
                 .submitCloseClick();
     }
 
-    //TODO в отдельной ветке прописать параметризованный тест
-    /*@ParameterizedTest
-    @Tag("WEB")
-    @DisplayName("Тест формы с сгенерированными данными")
-    void fullRegistrationGenerateData(String searchQuery) {
+    @ValueSource(strings = {//dataprovader
+            "8"
+    })
+    @ParameterizedTest(name = "Проверка заполнения на форме номера телефона {0}")
+    @Tags({
+            @Tag("SMOKE"),
+            @Tag("WEB")
+    })
+    void checkFullPersonNumber(String personNumber) {
+        formPage.setFirstNameField("Alex")
+                .setLastNameField("Smith")
+                .selectGenderWrapperField("Male")
+                .setUserNumberField(personNumber)
+                .setState("NCR")
+                .setCity("Delhi")
+                .submitClick()
+                .checkResult("Student Name", "Alex Smith")
+                .checkResult("Gender", "Male")
+                .checkResult("Mobile", "7926813093")
+                .checkResult("Mobile", personNumber)
+                .checkResult("State and City", "NCR Delhi")
+                .submitCloseClick();
+    }
 
-    }*/
+    /*@CsvSource(value = {})*/
+    @CsvFileSource(resources = "/test_data.csv")
+    @ParameterizedTest(name = "Проверка заполнения на форме страны {0} и города {1}")
+    @Tags({
+            @Tag("SMOKE"),
+            @Tag("WEB")
+    })
+    void checkSetStateAndCity(String state, String city) {
+        formPage.setFirstNameField("Alex")
+                .setLastNameField("Smith")
+                .selectGenderWrapperField("Male")
+                .setUserNumberField("7926813093")
+                .setState(state)
+                .setCity(city)
+                .submitClick()
+                .checkResult("Student Name", "Alex Smith")
+                .checkResult("Gender", "Male")
+                .checkResult("Mobile", "7926813093")
+                .checkResult("State and City", state + " " + city)
+                .submitCloseClick();
+    }
+
+    @EnumSource(State.class)
+    @ParameterizedTest(name = "Проверка заполнения на форме страны {0}")
+    @Tags({
+            @Tag("SMOKE"),
+            @Tag("WEB")
+    })
+    void checkSetAllState(State state) {
+        String city = RandomData.generateRandomCity(state.getNameState());
+        formPage.setFirstNameField("Alex")
+                .setLastNameField("Smith")
+                .selectGenderWrapperField("Male")
+                .setUserNumberField("7926813093")
+                .setState(state.getNameState())
+                .setCity(city)
+                .submitClick()
+                .checkResult("Student Name", "Alex Smith")
+                .checkResult("Gender", "Male")
+                .checkResult("Mobile", "7926813093")
+                .checkResult("State and City", state.getNameState() + " " + city)
+                .submitCloseClick();
+    }
 
     @AfterAll
     static void afterAll() {

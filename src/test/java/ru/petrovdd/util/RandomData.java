@@ -9,7 +9,6 @@ import java.util.*;
  */
 public class RandomData {
 
-    private final Random random = new Random();
     private final String randomGender;
     private final String randomHobbies;
     private final String randomState;
@@ -32,7 +31,7 @@ public class RandomData {
         randomGender = generateRandomGender();
         randomHobbies = generateRandomHobbies();
         randomState = generateRandomState();
-        randomCity = generateRandomCity();
+        randomCity = generateRandomCity(randomState);
         randomMonthName = generateMonthName();
         randomYear = String.valueOf(getRandomInt(1970, 2025));
         //TODO для дня генерация костыльная, подумать над разной верхней границей в зависимости от месяца
@@ -165,7 +164,7 @@ public class RandomData {
      *
      * @return наименование города
      */
-    private String generateRandomCity() {
+    public static String generateRandomCity(String randomState) {
         List<String> city = new ArrayList<>();
         if (randomState.equals("NCR")) {
             city.addAll(Arrays.asList("Delhi", "Gurgaon", "Noida"));
@@ -201,7 +200,8 @@ public class RandomData {
      * @param array массив данных
      * @return рандомный элемент массива
      */
-    private String getRandomItemFromArray(String[] array) {
+    private static String getRandomItemFromArray(String[] array) {
+        Random random = new Random();
         return array[random.nextInt(array.length)];
     }
 
@@ -213,6 +213,7 @@ public class RandomData {
      * @return случайное сгенерированное число
      */
     private int getRandomInt(int min, int max) {
+        Random random = new Random();
         return random.nextInt(max - min + 1) + min;
     }
 

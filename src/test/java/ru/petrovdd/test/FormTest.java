@@ -5,8 +5,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import ru.petrovdd.enums.State;
 import ru.petrovdd.page.FormPage;
 import ru.petrovdd.util.RandomData;
@@ -26,18 +28,24 @@ class FormTest {
 
     /**
      * Инициализируем объект драйвера и объект класса FormPage
+     * PageLoadStrategy - параметр в селениум, определяет стратегию загрузки страницы
+     * Normal - ждем, пока страница полностью загрузится, по умолчанию
+     * Eager - ждем пока не будет подгружен HTML-документ, на все остальное забиваем
+     * None - Нет проверки загрузки ресурсов
      */
     @BeforeAll
     static void beforeAll() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+        driver = new ChromeDriver(options);
         formPage = new FormPage(driver);
     }
 
     @BeforeEach
     void openPage() {
-        driver.manage().window().maximize();
+        //driver.manage().window().maximize();
         //TODO Не идеальное решение, но методом тыка выделил время загрузки страницы 5 сек(?)
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
         driver.get(BASE_URL);
     }
 
@@ -62,7 +70,7 @@ class FormTest {
                 .setUserNumberField("79268130933")
                 .setDateOfBirthInput("8", "November", "1992")
                 .selectHobbies("Sports")
-                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\test_data.csv")
+                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\csv\\test_data.csv")
                 .setCurrentAddress("USA")
                 .setState("NCR")
                 .setCity("Delhi")
@@ -97,7 +105,7 @@ class FormTest {
                 .setDateOfBirthInput(randomData.getDay(), randomData.getMonthName(), randomData.getYear())
                 .selectHobbies(randomData.getRandomHobbies())
                 //TODO подумать над генерацией пути для файла
-                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\test_data.csv")
+                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\csv\\test_data.csv")
                 .setCurrentAddress(randomData.getFullAddress())
                 .setState(randomData.getRandomState())
                 .setCity(randomData.getRandomCity())

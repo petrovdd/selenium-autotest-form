@@ -11,6 +11,8 @@ import ru.petrovdd.enums.State;
 import ru.petrovdd.page.FormPage;
 import ru.petrovdd.util.RandomData;
 
+import java.time.Duration;
+
 /**
  * Класс для проведения теста формы
  */
@@ -33,6 +35,9 @@ class FormTest {
 
     @BeforeEach
     void openPage() {
+        driver.manage().window().maximize();
+        //TODO Не идеальное решение, но методом тыка выделил время загрузки страницы 5 сек(?)
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
         driver.get(BASE_URL);
     }
 
@@ -68,7 +73,7 @@ class FormTest {
                 .checkResult("Mobile", "7926813093")
                 .checkResult("Date of Birth", "08 November,1992")
                 .checkResult("Hobbies", "Sports")
-                .checkResult("Picture", "test_data.csv")
+                .checkResult("Picture", "csv/test_data.csv")
                 .checkResult("Address", "USA")
                 .checkResult("State and City", "NCR Delhi")
                 .submitCloseClick();
@@ -106,14 +111,14 @@ class FormTest {
                 //.checkResult("Date of Birth",
                 //        randomData.getDay() + " " + randomData.getMonthName() + "," + randomData.getYear())
                 .checkResult("Hobbies", randomData.getRandomHobbies())
-                .checkResult("Picture", "test_data.csv")
+                .checkResult("Picture", "csv/test_data.csv")
                 .checkResult("Address", randomData.getFullAddress())
                 .checkResult("State and City", randomData.getRandomState() + " " + randomData.getRandomCity())
                 .submitCloseClick();
     }
 
     @ValueSource(strings = {//dataprovader
-            "8"
+            "8996926091"
     })
     @ParameterizedTest(name = "Проверка заполнения на форме номера телефона {0}")
     @Tags({
@@ -130,14 +135,13 @@ class FormTest {
                 .submitClick()
                 .checkResult("Student Name", "Alex Smith")
                 .checkResult("Gender", "Male")
-                .checkResult("Mobile", "7926813093")
                 .checkResult("Mobile", personNumber)
                 .checkResult("State and City", "NCR Delhi")
                 .submitCloseClick();
     }
 
     /*@CsvSource(value = {})*/
-    @CsvFileSource(resources = "/test_data.csv")
+    @CsvFileSource(resources = "/csv/test_data.csv")
     @ParameterizedTest(name = "Проверка заполнения на форме страны {0} и города {1}")
     @Tags({
             @Tag("SMOKE"),

@@ -41,6 +41,7 @@ class FormTest {
         formPage = new FormPage(driver);
     }
 
+    //используется для сигнализации о том, что аннотированный метод должен быть выполнен перед каждым методом @Test
     @BeforeEach
     void openPage() {
         //driver.manage().window().maximize();

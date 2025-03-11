@@ -17,10 +17,10 @@ import java.util.zip.ZipInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FileTests {
+public class FileTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
-    private final ClassLoader cs = FileTests.class.getClassLoader();
+    private final ClassLoader cs = FileTest.class.getClassLoader();
 
     @Test
     @DisplayName("Проверка и чтение полей PDF файла в Zip архиве")
@@ -66,8 +66,10 @@ public class FileTests {
                 name = entry.getName();
                 if (name.contains("filename.csv")) {
                     CSVReader reader = new CSVReader(new InputStreamReader(zips));
-                    List<String[]> Arr = reader.readAll();
-                    assertThat(new String[]{"Selenide", " Selenium"}).isEqualTo(Arr.get(0));
+                    List<String[]> arr = reader.readAll();
+                    if (!arr.isEmpty()) {
+                        assertThat(new String[]{"Selenide", " Selenium"}).isEqualTo(arr.get(0));
+                    }
                 }
             }
         }

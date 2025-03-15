@@ -120,7 +120,7 @@ class FormTest {
                 //.checkResult("Date of Birth",
                 //        randomData.getDay() + " " + randomData.getMonthName() + "," + randomData.getYear())
                 .checkResult("Hobbies", randomData.getRandomHobbies())
-                .checkResult("Picture", "csv/test_data.csv")
+                .checkResult("Picture", "test_data.csv")
                 .checkResult("Address", randomData.getFullAddress())
                 .checkResult("State and City", randomData.getRandomState() + " " + randomData.getRandomCity())
                 .submitCloseClick();

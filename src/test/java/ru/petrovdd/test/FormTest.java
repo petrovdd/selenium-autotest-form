@@ -37,6 +37,8 @@ class FormTest {
     static void beforeAll() {
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+        options.addArguments("--no-sandbox");
+        options.addArguments("--headless");
         driver = new ChromeDriver(options);
         formPage = new FormPage(driver);
     }
@@ -82,7 +84,7 @@ class FormTest {
                 .checkResult("Mobile", "7926813093")
                 .checkResult("Date of Birth", "08 November,1992")
                 .checkResult("Hobbies", "Sports")
-                .checkResult("Picture", "csv/test_data.csv")
+                .checkResult("Picture", "test_data.csv")
                 .checkResult("Address", "USA")
                 .checkResult("State and City", "NCR Delhi")
                 .submitCloseClick();

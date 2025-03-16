@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -25,6 +26,7 @@ class FormTest {
 
     static FormPage formPage;
     static WebDriver driver;
+    static JavascriptExecutor jsx;
 
     /**
      * Инициализируем объект драйвера и объект класса FormPage
@@ -38,6 +40,7 @@ class FormTest {
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.EAGER);
         driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
         formPage = new FormPage(driver);
     }
 

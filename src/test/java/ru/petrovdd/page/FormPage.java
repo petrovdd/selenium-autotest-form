@@ -1,10 +1,7 @@
 package ru.petrovdd.page;
 
 import org.jspecify.annotations.NonNull;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import ru.petrovdd.components.CalendarComponent;
@@ -20,6 +17,7 @@ public class FormPage {
     public WebDriver driver;
     private final CalendarComponent calendar;
     private final SelectComponent stateComponent;
+    private final JavascriptExecutor jsx;
 
     /**
      * Конструктор класса, нужен для инициализации полей класса
@@ -31,7 +29,7 @@ public class FormPage {
         this.driver = driver;
         calendar = new CalendarComponent(driver);
         stateComponent = new SelectComponent(driver);
-
+        jsx = (JavascriptExecutor) driver;
     }
 
     /**
@@ -279,6 +277,7 @@ public class FormPage {
      * @return ссылка на текущий объект класса FormPage
      */
     public FormPage submitClick() {
+        jsx.executeScript("window.scrollBy(0,450)", "");
         submitButton.click();
         return this;
     }

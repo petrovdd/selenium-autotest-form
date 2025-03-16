@@ -39,6 +39,7 @@ class FormTest {
     static void beforeAll() {
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+        options.addArguments("--headless", "--disable-gpu");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         formPage = new FormPage(driver);

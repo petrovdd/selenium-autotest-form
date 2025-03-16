@@ -37,8 +37,6 @@ class FormTest {
     static void beforeAll() {
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.EAGER);
-        options.addArguments("--no-sandbox");
-        options.addArguments("--headless");
         driver = new ChromeDriver(options);
         formPage = new FormPage(driver);
     }

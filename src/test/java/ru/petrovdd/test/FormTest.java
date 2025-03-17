@@ -161,6 +161,7 @@ class FormTest {
             @Tag("WEB")
     })
     void checkSetStateAndCity(String state, String city) {
+        System.out.println(state + " " + city);
         formPage.setFirstNameField("Alex")
                 .setLastNameField("Smith")
                 .selectGenderWrapperField("Male")

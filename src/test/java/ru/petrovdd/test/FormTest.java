@@ -14,6 +14,7 @@ import ru.petrovdd.enums.State;
 import ru.petrovdd.page.FormPage;
 import ru.petrovdd.util.RandomData;
 
+import java.io.File;
 import java.time.Duration;
 
 /**
@@ -75,7 +76,7 @@ class FormTest {
                 .setUserNumberField("79268130933")
                 .setDateOfBirthInput("8", "November", "1992")
                 .selectHobbies("Sports")
-                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\csv\\test_data.csv")
+                .setUploadFile(new File("./src/test/resources/csv/test_data.csv").getAbsolutePath())
                 .setCurrentAddress("USA")
                 .setState("NCR")
                 .setCity("Delhi")
@@ -109,8 +110,7 @@ class FormTest {
                 .setUserNumberField(randomData.getPhoneNumber())
                 .setDateOfBirthInput(randomData.getDay(), randomData.getMonthName(), randomData.getYear())
                 .selectHobbies(randomData.getRandomHobbies())
-                //TODO подумать над генерацией пути для файла
-                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\csv\\test_data.csv")
+                .setUploadFile(new File("./src/test/resources/csv/test_data.csv").getAbsolutePath())
                 .setCurrentAddress(randomData.getFullAddress())
                 .setState(randomData.getRandomState())
                 .setCity(randomData.getRandomCity())

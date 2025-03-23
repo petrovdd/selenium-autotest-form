@@ -3,6 +3,9 @@ package ru.petrovdd.properties.test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Класс на использованием параметризированного теста
+ */
 class SystemPropertiesTest {
 
     @Test

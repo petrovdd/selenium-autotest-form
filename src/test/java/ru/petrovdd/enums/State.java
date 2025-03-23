@@ -1,5 +1,8 @@
 package ru.petrovdd.enums;
 
+/**
+ * Перечисление состояний
+ */
 public enum State {
 
     NCR("NCR"),

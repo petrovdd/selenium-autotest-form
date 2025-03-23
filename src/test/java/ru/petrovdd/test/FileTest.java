@@ -18,6 +18,9 @@ import java.util.zip.ZipInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Класс на тестирование открытия и считывания файлов
+ */
 public class FileTest {
 
     ObjectMapper objectMapper = new ObjectMapper();

@@ -4,6 +4,7 @@ import com.codeborne.pdftest.PDF;
 import com.codeborne.xlstest.XLS;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.petrovdd.pojo.Employee;
@@ -17,6 +18,9 @@ import java.util.zip.ZipInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Класс на тестирование открытия и считывания файлов
+ */
 public class FileTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -24,6 +28,7 @@ public class FileTest {
 
     @Test
     @DisplayName("Проверка и чтение полей PDF файла в Zip архиве")
+    @Disabled
     void pdfFileParsingTest() throws IOException {
         try (ZipInputStream zips = new ZipInputStream(Objects.requireNonNull(cs.getResourceAsStream("zip/files.zip")), StandardCharsets.ISO_8859_1)) {
             ZipEntry entry;

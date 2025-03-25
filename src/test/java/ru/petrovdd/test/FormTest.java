@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -13,6 +14,7 @@ import ru.petrovdd.enums.State;
 import ru.petrovdd.page.FormPage;
 import ru.petrovdd.util.RandomData;
 
+import java.io.File;
 import java.time.Duration;
 
 /**
@@ -25,6 +27,7 @@ class FormTest {
 
     static FormPage formPage;
     static WebDriver driver;
+    static JavascriptExecutor jsx;
 
     /**
      * Инициализируем объект драйвера и объект класса FormPage
@@ -37,15 +40,17 @@ class FormTest {
     static void beforeAll() {
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+        options.addArguments("--headless", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
         formPage = new FormPage(driver);
     }
 
-    //используется для сигнализации о том, что аннотированный метод должен быть выполнен перед каждым методом @Test
+    /**
+     * Используется для сигнализации что аннотированный метод должен быть выполнен перед каждым @Test
+     */
     @BeforeEach
     void openPage() {
-        //driver.manage().window().maximize();
-        //TODO Не идеальное решение, но методом тыка выделил время загрузки страницы 5 сек(?)
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
         driver.get(BASE_URL);
     }
@@ -55,7 +60,6 @@ class FormTest {
      */
     @Test
     //TODO @AllureId() буду использовать когда подключу Allure, id тест-кейса, вынесу в отдельную ветку
-    //TODO Подкорректировать заголовки тест кейса
     @DisplayName("Все поля должны заполниться и закрыться форма с их выводом")
     @Tags({
             @Tag("SMOKE"),
@@ -63,7 +67,6 @@ class FormTest {
     })//TODO Прописать priority и severity в теге, пропишу в отдельной ветке у каждого теста
     @Disabled("Проигнорируем")
     void fullRegistration() {
-        //TODO добавить subject, в отдельную ветку т.к. много доработок
         formPage.setFirstNameField("Alex")
                 .setLastNameField("Smith")
                 .setUserEmailField("user@mail.ru")
@@ -71,7 +74,7 @@ class FormTest {
                 .setUserNumberField("79268130933")
                 .setDateOfBirthInput("8", "November", "1992")
                 .selectHobbies("Sports")
-                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\csv\\test_data.csv")
+                .setUploadFile(new File("./src/test/resources/csv/test_data.csv").getAbsolutePath())
                 .setCurrentAddress("USA")
                 .setState("NCR")
                 .setCity("Delhi")
@@ -82,7 +85,7 @@ class FormTest {
                 .checkResult("Mobile", "7926813093")
                 .checkResult("Date of Birth", "08 November,1992")
                 .checkResult("Hobbies", "Sports")
-                .checkResult("Picture", "csv/test_data.csv")
+                .checkResult("Picture", "test_data.csv")
                 .checkResult("Address", "USA")
                 .checkResult("State and City", "NCR Delhi")
                 .submitCloseClick();
@@ -94,10 +97,9 @@ class FormTest {
     @Test
     @Tag("WEB")
     @DisplayName("Тест формы с сгенерированными данными")
-    //@ValueSource(strings = {"Dan", "JUnit"}, name = "" - описание) - запустит для каждого значения свой тест
+    //@ValueSource(strings = {"Dan", "JUnit"}, name = "") - запустит для каждого значения свой тест
     void fullRegistrationGenerateData() {
         RandomData randomData = new RandomData();
-        //TODO добавить subject
         formPage.setFirstNameField(randomData.getFirstName())
                 .setLastNameField(randomData.getLastName())
                 .setUserEmailField(randomData.getRandomEmail())
@@ -105,8 +107,7 @@ class FormTest {
                 .setUserNumberField(randomData.getPhoneNumber())
                 .setDateOfBirthInput(randomData.getDay(), randomData.getMonthName(), randomData.getYear())
                 .selectHobbies(randomData.getRandomHobbies())
-                //TODO подумать над генерацией пути для файла
-                .setUploadFile("C:\\selenium-autotest\\src\\test\\resources\\csv\\test_data.csv")
+                .setUploadFile(new File("./src/test/resources/csv/test_data.csv").getAbsolutePath())
                 .setCurrentAddress(randomData.getFullAddress())
                 .setState(randomData.getRandomState())
                 .setCity(randomData.getRandomCity())
@@ -114,19 +115,17 @@ class FormTest {
                 .checkResult("Student Name", randomData.getFirstName() + " " + randomData.getLastName())
                 .checkResult("Student Email", randomData.getRandomEmail())
                 .checkResult("Gender", randomData.getRandomGender())
-                //Не пройдет, ошибка - в поле не влезает весь номер
-                //.checkResult("Mobile", randomData.getPhoneNumber())
-                //Не пройдет
-                //.checkResult("Date of Birth",
-                //        randomData.getDay() + " " + randomData.getMonthName() + "," + randomData.getYear())
                 .checkResult("Hobbies", randomData.getRandomHobbies())
-                .checkResult("Picture", "csv/test_data.csv")
+                .checkResult("Picture", "test_data.csv")
                 .checkResult("Address", randomData.getFullAddress())
                 .checkResult("State and City", randomData.getRandomState() + " " + randomData.getRandomCity())
                 .submitCloseClick();
     }
 
-    @ValueSource(strings = {//dataprovader
+    /**
+     * Тест с использованием dataprovader
+     */
+    @ValueSource(strings = {
             "8996926091"
     })
     @ParameterizedTest(name = "Проверка заполнения на форме номера телефона {0}")
@@ -157,6 +156,7 @@ class FormTest {
             @Tag("WEB")
     })
     void checkSetStateAndCity(String state, String city) {
+        System.out.println(state + " " + city);
         formPage.setFirstNameField("Alex")
                 .setLastNameField("Smith")
                 .selectGenderWrapperField("Male")

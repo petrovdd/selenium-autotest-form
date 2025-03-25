@@ -1,0 +1,16 @@
+{
+  "base": {
+    "project": "Some project name",
+    "environment": "",
+    "comment": "",
+    "reportLink": "",
+    "language": "ru",
+    "allureFolder": "target/site/allure-maven-plugin",
+    "enableChart": true
+  },
+  "telegram": {
+    "token": "7895854225:AAHgrWquirMe5q9vbjkE_lTDe--CbKii-Kc",
+    "chat": "-4744344733",
+    "replyTo": ""
+  }
+}

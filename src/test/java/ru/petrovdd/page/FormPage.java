@@ -10,7 +10,7 @@ import ru.petrovdd.components.SelectComponent;
 import java.time.Duration;
 
 /**
- * Класс представления формы решистрации
+ * Класс представления формы регистрации
  */
 public class FormPage {
 
